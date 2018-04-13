@@ -1,0 +1,63 @@
+<?php
+/**
+ * @file
+ * Contains \Drupal\custom_site_config.module
+ */
+
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function custom_site_config_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Adding new field Site API Key to site information settings form
+  if ($form_id == 'system_site_information_settings') {
+    try {
+      //get the api key values from config
+      $config = \Drupal::config('custom_site_config.settings');
+      $default_value = is_null($config->get('custom_site_config.siteapikey')) ? t('No API Key yet') : $config->get('custom_site_config.siteapikey');
+      //add new textfield for Site API Key
+      $form['field_site_api_key'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Site API Key'),
+        '#description' => t('API key to authenticate the user.'),
+        '#default_value' => $default_value,
+      );
+      //change the submit button text
+      $form['actions']['submit']['#value'] = 'Update Configuration';
+
+      //add a submit handler to the submit button
+      $form['actions']['submit']['#submit'][] = 'custom_site_config_save_site_api_config';
+    }
+    catch (Exception $ex) {
+
+    }
+  }
+}
+
+/**
+ * Submit handler for the site information form to save the api key values
+ */
+function custom_site_config_save_site_api_config(&$form, FormStateInterface $form_state) {
+  try {
+    //get the form value for api key field
+    $api_key = $form_state->getValue('field_site_api_key');
+
+    //get the configuration object
+    $config = \Drupal::configFactory()
+      ->getEditable('custom_site_config.settings');
+
+    //set the value for site api key
+    $config->set('custom_site_config.siteapikey', $api_key);
+
+    $config->save();
+
+    drupal_set_message(t('Site API Ky has been saved.'), 'status');
+  }
+  catch (Exception $ex) {
+
+  }
+
+}

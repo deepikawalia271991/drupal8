@@ -1,0 +1,6 @@
+custom_site_config.settings:
+  type: mapping
+  label: Variable Settings of Custom Site Configuration
+  mapping:
+    siteapikey:
+      type: string

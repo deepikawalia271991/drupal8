@@ -1,0 +1,5 @@
+name: Custom Site configuration
+description: A module to configure site information
+core: 8.x
+package: Custom
+type: module

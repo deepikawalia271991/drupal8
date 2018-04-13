@@ -1,0 +1,11 @@
+
+page_data.call:
+ path: 'page_data/{apikey}/{nid}'
+ defaults:
+  _title: 'Get Page data'
+  _controller: '\Drupal\custom_site_config\Controller\CustomAPIController::get_page_data'
+ methods:  [GET]
+ requirements:
+    _custom_access: '\Drupal\custom_site_config\Controller\CustomAPIController::validate_api_key'
+
+ 
